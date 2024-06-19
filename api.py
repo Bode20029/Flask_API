@@ -29,6 +29,15 @@ class Users(Resource):
     def get(self):
         users = UserModel.query.all()
         return users
+        
+    @marshal_with(userFields)
+    def post(self):
+        args = user_args.parse_args()
+        user = UserModel(name=args["name"], email= args["email"])
+        db.session.add(user)
+        db.session.commit()
+        users = UserModel.query.all()
+        return users, 201
 
 api.add_resource(Users, '/api/users/')
 
